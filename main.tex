@@ -1,0 +1,1044 @@
+\documentclass{article}
+
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{qtree}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+  \hypersetup{
+    colorlinks = true,
+    urlcolor = blue,       % color of external links using \href
+    linkcolor= blue,       % color of internal links 
+    citecolor= blue,       % color of links to bibliography
+    filecolor= blue,        % color of file links
+    }
+    
+\usepackage{listings}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{pink}{RGB}{255, 181, 167}
+\definecolor{powderblue}{RGB}{181, 214, 214}
+
+\lstset{frame=tb,
+  language=haskell,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+
+\title{%
+  Programming Languages \\
+  \large CPSC-354 Report}
+\author{Laila Hardisty  \\ Chapman University}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Language is inherent to our world, how we take in information and communicate with those around us. This same idea applies to Computer Science through the concept of Programming Languages. They are central to defining the computability of problems, allowing us to communicate with the computer. In this paper, we will be looking at Haskell as a programming language, a couple of the theories behind programming languages, as well as exploring a project to understand Haskell further. This report serves to enhance certain aspects of programming languages and provides a brief overview of important ideas.
+\end{abstract}
+
+\break
+
+\tableofcontents
+
+\break
+
+\section{Introduction}\label{intro}
+
+Throughout this paper, we’ll be taking a look at Programming Languages as a concept central to the study of Computer Science. This will be accomplished through an overview of Haskell, a look at theories that are essential for understanding programming languages, and a simple project completed in Haskell. In the first section of this report, we will be exploring Haskell. Specifically, how to get started using Haskell, what the key features of Haskell are, a few examples using Haskell to explain its features better, and recommended resources with which to explore Haskell further. Haskell features will include Types and Type Classes, Laziness, Recursion, Monads. These are features that are a distinctive part of Haskell but are also indicative of other similar programming languages. The second part will cover two essential programming language theories: parsing and lambda calculus. The parser section will include discussions regarding the structure of a parser, abstract syntax trees, and ambiguous and non-ambiguous grammar. For the lambda calculus section, the topics will include binding and scope, church numerals, and the idea of a language being Turing complete. Finally, the paper will end with a project written using Haskell. Using Roman numerals, the project will be about rewriting to create a calculator along with other conversion functions. 
+
+\section{Haskell}\label{haskell}
+
+The theories of Programming Languages can be clearly illustrated in Haskell as it is a functional language. Haskell is also Turing complete a theory that will defined later in this paper, that makes it quite an adept programming language.
+
+\subsection{Getting Started}
+
+The first step to begin coding in Haskell, before you even know what Haskell is, is to install Haskell. This was one of the harder parts for me as there were a lot of confusing resources and it all became a labyrinth of trying to download something and then having an error, and then repeating the process again. For this part, I would recommend Dr. Kurz tutorial which can be found in the resources section.  If you have a Mac, like me it's pretty simple:   \colorbox{pink}{ \lstinline{ curl -sSL [https://get.haskellstack.org/](https://get.haskellstack.org/) | sh}} . 
+Once Haskell is installed you should then be able to use the interactive console of the Glasgow Haskell Compiler, this is where you'll be able to interact with, load, and run your scripts. 
+
+Important commands to know:
+\begin{itemize}
+\item \colorbox{pink}{ \lstinline{stack exec ghci}} or \colorbox{pink}{ \lstinline{ghci}} to open the console
+\item \colorbox{pink}{ \lstinline{:quit}} to exit the console
+\item \colorbox{pink}{ \lstinline{:l scriptName}} or \colorbox{pink}{ \lstinline{:load scriptName}} to load the Haskell file before running it
+\item \colorbox{pink}{ \lstinline{:r}} will reload the current script
+\item \colorbox{pink}{ \lstinline{:main}} to run what code is contained in main
+\end{itemize}
+
+Once you have installed Haskell and are able to open the ghci console you are now ready to start learning about Haskell.
+
+\subsection{Key Features}
+
+The most important thing to know about Haskell is that it is a purely functional programming language, in all previous classes imperative programming languages have been used when coding. So what is a purely functional language, well in short it means that you don't tell the computer what to do but rather you tell it what stuff is. This means that you can't set a variable as something and then redefine it later. Also that functions have no side effects and if you give it the same input it will always produce the same output, the latter phenomenon is known as referential transparency. A purely functional language is a language that only supports functional paradigms, while impure functional languages support functional paradigms and imperative style programming \cite{FPI}. Functional programming was specifically designed to work with mathematical functions that use conditional expressions and recursion. It works especially well with high school algebra, lambda calculus, and problems where equational reasoning is used. Functional programming also abstracts away from memory as it requires such a large memory space due to the fact that it uses immutable data \cite{FPI}. 
+
+\subsubsection{Types and Type Classes}
+There are a few crucial points about Haskell in regards to types. The first is that it is statically typed which means that the variable types are explicitly declared and thus are determined at compile time \cite{TT}. Haskell has type inference as well so that the type system is able to deduce the type of variable. There is no need to label every piece of code with the type because the type system is intelligent enough to figure it out itself. All this allows Haskell to be elegant and concise this leads to shorter programs than the imperative equivalent. Haskell shares many of the same common types with other programming languages. The command \colorbox{pink}{ \lstinline{:t}} can be used on any expression to tell us the type. 
+
+\paragraph{Haskell Supported Types} 
+
+\begin{itemize}
+\item Int: a bounded integer that is used for whole numbers. The maximum is 2147483647 and the minimum is -2147483648.
+
+\item Integer: same as Int but it can express bigger numbers, however, Int is more efficient.
+
+\item Float: for floating points with single precision.
+
+\item Double: for floating points with double the precision. 
+
+\item Bool: the typical boolean type of true or false.
+
+\item Char: a single character, denoted by single quotes ' '. A list of characters makes up a string. 
+\end{itemize}
+
+\paragraph {Data Types}
+
+\subparagraph{Lists:}  
+
+Represented as \lstinline{[a]} is a homogeneous data structure as they store several elements of the same type, similar to most other programming languages list except that they can't be indexed. 
+
+Common functions:
+
+\begin{itemize}
+\item \colorbox{pink}{ \lstinline{++}} used to concatenate two list
+
+\item \colorbox{pink}{ \lstinline{:}} used to prepend a list as in \colorbox{pink}{ \lstinline{5:[1,2,3,4,5]} $\rightarrow$ \lstinline{[5,1,2,3,4,5]}}
+
+\item \colorbox{pink}{ \lstinline{!!}} to get an item out of a list. For example, \colorbox{pink}{ \lstinline{[5,8,3,3] !! 2}} returns 8 
+
+\item \colorbox{pink}{ \lstinline{head}} takes a list and returns its head, the first item in a list 
+
+\item \colorbox{pink}{ \lstinline{tail}} takes a list and returns the tail, which is everything but the head
+
+\item \colorbox{pink}{ \lstinline{last}} takes a list and returns the last element
+
+\item \colorbox{pink}{ \lstinline{init}} takes a list and returns everything except the last element 
+
+\item \colorbox{pink}{ \lstinline{length}} takes a list and returns its length
+
+\item \colorbox{pink}{ \lstinline{null}} checks if a list is empty; returns true if it is, returns false if its not
+
+\item \colorbox{pink}{ \lstinline{elem}} takes a thing and a list of things and tells us if that thing is an element of the list for example, \colorbox{pink}{ \lstinline{4 `elem` [3,4,5,6]} $\rightarrow$ \lstinline{True}}
+\end{itemize}
+
+\subparagraph{Ranges:}  
+
+You can take lists and use them to create a patterned set of values that can be enumerated. This can be accomplished a few different ways, \colorbox{pink}{ \lstinline{[1..10]} $\rightarrow$  \lstinline{[1,2,3,4,5,6,7,8,9,10]}]} this can also be applied to char and be reversed, this can also be done to create sequences such as \colorbox{pink}{ \lstinline{[3,6..20]} $\rightarrow$ \lstinline{[3,6,9,12,15,18]}} it is not recommended however to do this with floats. Similar to creating sequences you can also use the keyword \colorbox{pink}{ \lstinline{take}} to get a specified amount of a range as in \colorbox{pink}{ \lstinline{take 24 [13,26..]}} to get the first 24 multiples of 13. The keyword can also be used in combination with \colorbox{pink}{ \lstinline{cycle}} in order to create a repetitive list since \colorbox{pink}{ \lstinline{cycle}} takes a list and cycles it into an infinite list \colorbox{pink}{ \lstinline{take 12 (cycle "hi ")} $\rightarrow$ \lstinline{"hi hi hi hi "}}
+
+\paragraph{Type Classes} 
+
+\subparagraph{}
+
+Basically, type classes are an interface that defines some sort of behavior. They allow you to create your own interface as well that provides a common feature set over a wide variety of types. The \colorbox{pink}{ \lstinline{:t}} keyword can again be used in this case, if you use it on a function instead of a type it shows you the behavior that the typeclass describes. This can be shown using the equality operator, \colorbox{pink}{ \lstinline{:t ==}} will give you \colorbox{pink}{ \lstinline{(==) :: (Eq a) => a -> a -> Bool}}. This introduces us to \colorbox{pink}{ \lstinline{=>}} symbol which is a class constraint, it tells you what the constraints are type-wise for the function. It is basically telling you in this case that the equality operator can take two values that are of the same type and the type is a member of the Eq typeclass that the equality operator is a part of. In this case, the class constraint is E, this can also be called context since it is placed at the front of the expression and lets you what the rest of the expression is in reference to \cite{TCO}. An important typeclass to know for the Programming Languages course is the \textbf{Num} typeclass which is the numeric typeclass containing such types as Int and Integer meaning that they act like numbers. For an operator like  \colorbox{pink}{ \lstinline{*}} the typeclass tells you that,  \colorbox{pink}{ \lstinline{(*) :: (Num a) => a -> a -> a}} it takes two values of type Num and returns type Num, this can come in handy when you need to define a function and you want take in one type and return another. I used this for a function where I wanted to take in an Integer and then return a list of Integers, so I had to define it as  \colorbox{pink}{ \lstinline{hailstone :: Integer -> [Integer]}}. While most of the numerical operators are the same in Haskell there is one crucial one that is different, that would be divide. Instead of using the symbol \colorbox{pink}{ \lstinline{/}} like most programming languages, Haskell uses \colorbox{pink}{ \lstinline{`div`}}. It is important to note that when I'm using \colorbox{pink}{ `} this symbol is not an apostrophe, as in  \colorbox{pink}{'}, it is actually an accent mark.
+
+\subsubsection{Laziness}
+
+Since Haskell is a functional programming language this means that it only evaluates computations when they're needed which makes the program more efficient \cite{WFP}. Programs will reuse results from previous computations and save on run time \cite{WFP}. Haskell is able to accomplish this by something known as lazy graph reduction. This does not mean that there aren't functional programming languages that don't evaluate lazily, for example OCaml. It is able to evaluate only when needed by using leftmost outermost reduction which is the same thing as normal order reduction \cite{CSE}. This system along with pattern-matching, call-by-need, and thunks. A thunk is a function that returned from another function, or in more complex terms a subroutine used to inject an additional calculation into another subroutine \cite{WT}. A thunk helps to delay calculations until they're actually needed, which is why it is so helpful in lazy programming. Pattern-matching and thunks are also able to help out with evaluating just enough. Call-by-need also helps out with evaluating at most once, which requires the most techniques \cite{LEI}. Evaluating at most once uses: substitute pointers, updating redex root with result, and a self-updating model \cite{LEI}. While all the techniques are important you really only need to know the three main points when it comes to how Haskell is lazy. To sum up lazy programming:
+
+\begin{itemize}
+
+\item it evaluates only when needed
+
+\item it evaluates just enough
+
+\item it evaluates at most once 
+
+\end{itemize}
+
+\subsubsection{Recursion}
+
+Functional programming tends to avoid using if-else statements and loops in general \cite{WFP}. This makes sense based on our previous knowledge of functional programming as these constructors can easily create different outputs with the same input and that would not be up to functional programming standards. Haskell can use if-then-else statements sparingly, the do notation, or case statements to achieve the same effect as an if-else statement. Since loops and if-else statements aren't as common, functional programs often use recursion in place of these constructors for iterative tasks. Haskell, in particular, is really meant for recursive programming, since once you understand the components it is pretty simple to get. As with most instances of recursion, it is easiest to start thinking of recursion in terms of the base case and what it would take to get there. It aligns with how you would apply recursion in other programming languages except that for Haskell recursion becomes one of its most important features. This goes along with the fact that Haskell works especially with mathematical ideas as definitions in mathematics are often defined recursively. It is helpful in some cases when working with recursion to define edge conditions, these are elements that are not defined recursively but help to terminate the function \cite{R}. Often edge conditions are scenarios where applying the recursive function doesn't make sense. Haskell also uses techniques like pattern matching which makes recursive programming much easier, edge conditions, and base cases are used to make patterns clearer for the recursive function to follow \cite{R}. Recursive functions are imperative when it comes to programming in Haskell which is why Haskell was made to, as simply as possible when it comes to recursion, implement them.
+
+\subsubsection{Monads}
+
+\paragraph{Basics}
+
+\subparagraph{}
+
+Without getting into the technical details, monads are strategies for solving coding problems that recur often, regardless of what you're writing \cite{AAM}. Monad strategies allow you to combine computations into more complex computations, it helps to organize the computations as values and sequences of computations as typed values \cite{AAM}. A monad allows you to not have to code a combination each time it is needed. Once you understand monads, which are the hardest part of Haskell so far, you'll have access to features that will make your programming easier. There are three features that monads possess that make them useful when it comes to functional programs.
+
+\begin{itemize}
+
+\item Modularity: this is what it means by creating more complex computations from other computations while keeping the combination strategy separate.
+
+\item Flexibility: when using monads for functional programming, the program becomes more adaptable. All of a monads strategy can be found in a singular place allowing for such flexibility.
+
+\item Isolation: monads allow imperative-style computations while using a purely functional language. They can deal with side-effects that Haskell doesn't allow outside of the main part of the program.
+
+\end{itemize}
+
+\paragraph{Operators}
+
+\subparagraph{}
+
+The monad class defines two basic operators, \colorbox{pink}{ \lstinline{>>=}} known as a bind and \colorbox{pink}{ \lstinline{return}} \cite{AM}.
+
+\break
+
+\begin{lstlisting}
+
+infixl 1  >>, >>=
+
+class Monad m where
+
+    (>>=)            :: m a -> (a -> m b) -> m b
+
+    (>>)            :: m a -> m b -> m b
+
+    return           :: a -> m a
+
+    fail             :: String -> m a
+
+    m >> k           =  m >>= \_ -> k
+ 
+\end{lstlisting}
+
+\begin{itemize}
+
+\item \colorbox{pink}{ \lstinline{>>=} or { \lstinline{>>}}} is used to combine two monadic values, it takes a monadic value and a function takes a normal value and returns a monadic value. \colorbox{pink}{ \lstinline{<<}} is used when the function does not need the value produced by the first monadic operator.
+
+\item \colorbox{pink}{ \lstinline{return}} is used to inject a value into the monad. It takes something and surrounds it with a monad. 
+
+\item \colorbox{pink}{ \lstinline{fail}} never necessary to use it explicitly in code. Used by Haskell to enable failure for special monads. 
+
+\end{itemize}
+
+The precise meaning of such operators as the bind depends upon the monad. These operators help when trying to apply values that come with certain contexts, how we have to account for their behavior and feed them into other functions. An important keyword to know when it comes to monads is \colorbox{pink}{ \lstinline{Nothing}} which represents the absence of a value or that the computation has failed \cite{FM}. 
+
+\paragraph{do notation}
+
+\subparagraph{}
+
+Syntax like \colorbox{pink}{ \lstinline{do}} helps to simplify chains of monadic operations, by bringing together monadic values in sequence \cite{AM}. It can help when there is a failure context, is able to check values before the bind operator worries about their context. When creating a \colorbox{pink}{ \lstinline{do}} expression, every line is a monadic value whose result can be inspected using \colorbox{pink}{ \lstinline{<-}}. The formatting of a \colorbox{pink}{ \lstinline{do}} expression is partly what makes monads more similar to imperative programming. The expression is sequential though because each line relies on the value that was found in the previous line \cite{FM}. Pattern matching can be used with the \colorbox{pink}{ \lstinline{do}} notation when binding monadic values to names. While pattern matching can fail in some cases often the next pattern will be matched, if every pattern fails then the \colorbox{pink}{ \lstinline{fail}} function is called. The fail function only allows the current monad to fail so that the whole program doesn't crash. Some monads that incorporate the concept of failure into their programming so that we get a result that isn't a crashed program. 
+
+\paragraph{Laws}
+
+\subparagraph{}
+
+Just because something is an instance of the monad typeclass does not mean it is a monad, it has to abide by certain laws in order to be considered a monad. These laws are what allow us to make reasonable assumptions about all monads. The first two laws describe how \colorbox{pink}{ \lstinline{return}} should function, while the third law describes how a chain of monadic functions should act.
+
+\subparagraph{Left Identity:}
+
+States that if we take a value and it is put it in default context with \colorbox{pink}{ \lstinline{return}} then fed to a function using bind, that's the same thing as taking a value and applying the function to it \cite{FM}. 
+
+\subparagraph{Right Identity:}
+
+States that if we have a monadic value and we use bind to feed it to \colorbox{pink}{ \lstinline{return}}, then we have the original monadic value \cite{FM}. 
+
+\subparagraph{Associativity:} 
+
+States that when we have a chain of monadic values, it shouldn't matter how they're nested \cite{FM}. As the monadic values are bounded together throughout the function so it doesn't how these values line up, it just matters what they mean. 
+
+\paragraph{Types of Monads}
+
+\subparagraph{}
+
+The three most common monads are:
+
+\begin{itemize}
+
+\item Maybe: a monad for building computations that may fail to return a value. 
+
+\item List: the Haskell list type constructor is a monad. Allows us to build computations that can return none, one, or more values \cite{AAM}. 
+
+\item I/O: Haskells input/output system functions as a monad that allows it to be separated from the purely functional part of the language. Common actions include the ability to read and set global variables, write files, and read input. 
+
+\end{itemize}
+
+\subsection{Examples}
+
+\paragraph{Simple Arithmetic}
+
+\subparagraph{}
+
+Simple arithmetic can be done within the Glasgow Haskell Compiler:
+
+\begin{lstlisting}
+
+ghci> 2 + 15
+17
+ghci> 49 * 100
+4900
+ghci> 1892 - 1472
+420
+ghci> 5 / 2
+2.5
+
+\end{lstlisting}
+
+\paragraph{Boolean Algebra}
+
+\subparagraph{}
+
+\begin{lstlisting}
+
+ghci> True && False
+False
+ghci> True && True
+True
+ghci> False || True
+True
+ghci> not False
+True
+ghci> not (True && True)
+False
+
+\end{lstlisting}
+
+\paragraph{Testing for Equality}
+
+\begin{lstlisting}
+
+ghci> 5 == 5
+True
+ghci> 1 == 0
+False
+ghci> 5 /= 5
+False
+ghci> 5 /= 4
+True
+ghci> "hello" == "hello"
+True
+
+\end{lstlisting}
+
+\paragraph{Prefix vs Infix Functions}
+
+\begin{itemize}
+    \item Prefix Function: the function is applied at the beginning of the expression. Most functions in Haskell are in this form. They are called by writing the function name, a space and then the parameters, separated by spaces. For example, \colorbox{pink}{ \lstinline{min 9 10} $\rightarrow$ \lstinline{9}}
+    \item Infix Function: the function is being applied in the middle. More commonly found in imperative languages. Such functions like, \colorbox{pink}{ \lstinline{3 * 8} $\rightarrow$ \lstinline{24}} or \colorbox{pink}{ \lstinline{24 `div` 8} $\rightarrow$ \lstinline{3}}.
+\end{itemize}
+
+To compare the two, \colorbox{pink}{ \lstinline{div 92 10} is the same as \lstinline{92 'div' 10}}
+
+\paragraph{Type Classes}
+
+\begin{lstlisting}
+ghci> :t 20
+20 :: (Num t) => t 
+ghci> :t head  
+head :: [a] -> a  
+ghci> :t read  
+read :: (Read a) => String -> a  
+
+ghci> read "5" :: Int  
+5  
+ghci> read "5" :: Float  
+5.0  
+ghci> (read "5" :: Float) * 4  
+20.0  
+ghci> read "[1,2,3,4]" :: [Int]  
+[1,2,3,4]  
+ghci> read "(3, 'a')" :: (Int, Char)  
+(3, 'a')
+
+addThree :: Int -> Int -> Int -> Int  
+addThree x y z = x + y + z  
+\end{lstlisting}
+
+\break
+
+\paragraph{Maybe Monad}
+
+\begin{lstlisting}
+fmap :: (Functor f) => (a -> b) -> f a -> f b  
+ghci> fmap (++"!") (Just "wisdom")  
+Just "wisdom!"  
+ghci> fmap (++"!") Nothing  
+Nothing  
+ghci> Just (+3) <*> Just 3  
+Just 6  
+ghci> Nothing <*> Just "greed"  
+Nothing  
+ghci> Just ord <*> Nothing  
+Nothing  
+\end{lstlisting}
+
+\paragraph{A Simple Function}
+
+\subparagraph{}
+
+To be implemented in a firstScript.hs, (.hs is the Haskell file type): \colorbox{pink}{ \lstinline{doubleMe x = x + x}}. This can then be called while in the Glasgow Haskell Compiler
+
+\begin{lstlisting}
+
+ghci> :l firstScript
+[1 of 1] Compiling Main             ( firstScript.hs, interpreted )
+Ok, one module loaded.
+*Main> doubleMe 9
+18
+*Main> doubleMe 8.3
+16.6
+
+\end{lstlisting}
+
+\hfill \break
+
+All the examples in this section were either adaptations, compiled from \href {http://learnyouahaskell.com/chapters}{Learn You a Haskell for Great Good!} or \cite{PL} and my own knowledge, or purely from my knowledge.
+
+\subsection{Resources}
+
+For more information about any particular section feel free to look at the references.
+
+\begin{itemize}
+    \item For installing Haskell: \href{https://hackmd.io/@alexhkurz/Hk86XnCzD}{Installing Haskell}
+    
+    \item My favorite Haskell tutorial: \href {http://learnyouahaskell.com/chapters}{Learn You a Haskell for Great Good!}
+    
+\end{itemize}
+
+\section{Programming Languages Theory}
+This section will investigate two theories that are central to the study of Programming Languages, the first of which is also a concept concerning Languages at large. Parsing and Lambda Calculus, these two notions both help to give a basic understanding of what it means to be a Programming Language.
+
+\subsection{Parsing}
+
+Parsing is the method of transforming a linear sequence of characters into an abstract syntax tree \cite{P}. Another more exact way of looking at it is that parsing is a way of interpreting the input stream as terms in the language at hand \cite{AS}. Or in more simple terms it's about knowing where to put parentheses so that the parser will break down the input in an intended way. A parser is able to piece together what the input sequence means by breaking it down into an abstract syntax tree/parse tree. This is done by identifying the structure based upon the predefined grammar and extracting the data. It takes the concrete syntax and then parses it to create the abstract syntax which can later be used to create a value by an interpreter \cite{PL}. This interpretation of the abstract syntax is done using recursion upon the abstract syntax tree. Parsing is necessary for programming languages as there are different forms of how the data can be understood by the software, and ways the computer might need to use them \cite{GP}.
+
+\subsubsection{Introduction}
+
+Humans, ourselves, parse every day using ingrained grammar gained from living. For example, if you were to look at a picture of a person's face you could come up with a few guesses about what type of emotion they're feeling based on their facial expression. While you might not always be right, you are able to take the prior knowledge you have about emotions and compare that to the photo in front of you in order to arrive at a conclusion. This same phenomenon is also present in math expressions, when evaluating \colorbox{powderblue} {$9 -  4 * 2$} you know due to previous teachings that you should use the grammar PEMDAS when deciding in what order you should evaluate the expression. This would lead to you completing the multiplication \colorbox{powderblue} {$4 * 2$} term giving you a value of \colorbox{powderblue} {$8$} before evaluating the subtraction term \colorbox{powderblue} {$9 -  8$} giving you a value of \colorbox{powderblue} {$-1$}. If you did not have this grammar with which to base your evaluation upon, you would have two options when it came to how you might approach this expression. While the former evaluation is the current agreed-upon method, an alternative process would be to evaluate the subtraction \colorbox{powderblue} {$9 -  4$} term first resulting in an multiplication expression of \colorbox{powderblue} {$5 * 2$} concluding in a value of \colorbox{powderblue} {$10$}. This is why parentheses are such a powerful symbol as they are easily able to denote which term in the expression should be evaluated first without relying on an extensive predetermined grammar or to go agains. In order to evaluate using the first method it could be expressed as \colorbox{powderblue} {$9 -  (4 * 2)$} or if it was intended to be evaluated in the manner of the second \colorbox{powderblue} {$(9 -  4) * 2$}. This is why grammar for how to interpret input sequences is extremely useful when parsing. Abstract syntax trees are a way of visualizing the breakdown of expressions. However, the usefulness and specificity of the grammar is dependent upon whether it is ambiguous or non-ambiguous.
+
+\paragraph{Structure of a Parser}
+
+\subparagraph{}
+
+A parser is comprised of a lexer, also known as a lexical analyzer or a tokenizer, and the proper parser. The overall function of the lexer is to take the input sequence and break it down into tokens, this is what the proper parser will work with \cite{AS}. The proper parser will scan the provided tokens to create an abstract syntax tree that will then be fed to the interpreter \cite{PL}. Some parsers do not break down this process into two steps, instead, they combine the lexer and proper parser into one called a scannerless parser \cite{GP}.  If the parser was given an input of \colorbox{powderblue} {$2 + 2$} the lexer would then find the tokens which in this case would be NUM \colorbox{powderblue} {$2$}, PLUS \colorbox{powderblue} {$+$}, and NUM \colorbox{powderblue} {$2$}, with the titles differing depending on what the grammar defined it as. These are the tokens the proper parser would receive and then create an abstract syntax tree out of.
+
+\subsubsection{Abstract Syntax Trees}
+
+\Tree [.Num [.1 ]]
+
+\hfill \break
+
+Above is an example of an abstract syntax tree (AST), a more refined version of a parse tree, or a concrete syntax tree, referring to the output generated by the parser. While they are both of the data structure type known as a tree and have root nodes, as well as child nodes and subtrees that represent the tokenized input they do represent different levels of abstraction. The parse tree is generated first, it contains all the tokens given by the lexer as well as the rules given by the grammar \cite{GP}. A parse tree is a more direct representation of the concrete syntax including all the intermediary parts \cite{PL}. The abstract syntax tree then condenses this information into only the most important parts, leaving only the necessary information for the interpreter. The differences between the two and how the tree works are best represented visually.
+The grammar for the following trees would be:
+
+\begin{lstlisting}
+Exp -> Exp '-' Exp1
+Exp -> Exp1
+Exp1 -> Exp1 '*' Exp2
+Exp1 -> Exp2
+Exp2 -> Integer
+Exp2 -> '(' Exp ')'
+
+coercions Exp 2
+\end{lstlisting}
+
+ Let's look at the expression \colorbox{powderblue} {$9 - (4 * 2)$} as a parse tree, and as an abstract syntax tree.
+
+\hfill \break
+
+\qtreecenterfalse
+\emph{Parse Tree}
+\Tree [.Exp [.Exp {Exp1 \\ Exp2 \\ Integer \\ 9} ].Exp - [ {Exp1 \\ Exp2 \\ Integer \\ 4} * {Exp2 \\ Integer \\ \\ 2} ].Exp1 ] 
+\hskip8em
+ \emph{AST}
+\Tree [.Minus [ 9 ].Num [ [ 4 ].Num [ 2 ] .Num ].Times ]
+
+\hfill \break
+
+Compared to the expression \colorbox{powderblue} {$(9 -  4) * 2$} as a parse tree, and as an abstract syntax tree.
+
+\qtreecenterfalse
+\emph{Parse Tree}
+\Tree [.Exp [ {Exp1 \\ Exp2 \\ Integer \\ 9} - {Exp2 \\ Integer \\ \\ 4} ].Exp1 * [.Exp {Exp1 \\ Exp2 \\ Integer \\ 2} ].Exp ] 
+\hskip8em
+ \emph{AST}
+\Tree [.Times [ [ 9 ].Num [ 4 ] .Num ].Minus [ 2 ].Num ]
+
+\hfill \break
+
+While these trees do not explicitly show the parentheses they do affect how the parse tree and therefore the abstract syntax tree is interpreted. These trees when going through the interpreter are computed bottom-up \cite{PL}. It is the grammar that allows the rules to be analyzed as an arithmetic expression. In this instance, it is a context-free grammar that is used to generate the above trees, an important and commonly used grammar for parsers. This type of grammar is also known as left-recursive grammar since the expressions are defined in inverse order of precedence resulting in leftmost derivation trees. Looking more closely at context-free grammar it can be divided into ambiguous and non-ambiguous grammar. 
+
+\subsubsection{Ambiguous Grammar}
+
+When using context-free grammar (CFG) to generate trees, it is known as ambiguous if it generates more than one AST or parse tree for the same input string \cite{DAU}. It is clear to see why a grammar that generates more than one tree for an input sequence would contain some ambiguity. Ambiguous grammar is easily created when there aren't levels attached to the rules, or in other words, there is only 1 coercion \cite{PL}. This might lead to the parser getting stuck if it is unsure of how to generate the expression although the parse tree generated would shorter and faster than the one found using non-ambiguous grammar \cite{DAU}. This type of grammar also generates different trees depending on if the leftmost or rightmost derivation is used, and may even have multiple for each \cite{AUG}. An example of ambiguous grammar would be:
+
+\begin{lstlisting}
+
+Exp ::= Exp "+" Exp ;
+Exp ::= Exp "*" Exp ;
+Exp ::= a ; 
+
+\end{lstlisting}
+
+If this grammar were to be used on \colorbox{powderblue} {$a + a * a$}, there would be two different resulting parse trees.
+
+\hfill \break
+
+\qtreecenterfalse
+\emph{Parse Tree 1}
+\Tree [.Exp [ a ].Exp + [ [ a ].Exp * [ a ] .Exp ].Exp ]
+\hskip6em
+\emph{Parse Tree 2}
+\Tree [.Exp [ [ a ].Exp + [ a ] .Exp ].Exp * [ a ].Exp ]
+
+\hfill \break
+
+Another example of an ambiguous grammar is:
+
+\begin{lstlisting}
+
+Exp ::= AB | aaB;
+A ::= a | Aa ;
+B ::= b ; 
+coercions Exp 2 ;
+
+\end{lstlisting}
+
+Using this grammar on the string \colorbox{powderblue} {$aab$}, two different parse trees can be derived. 
+
+\hfill \break
+
+\qtreecenterfalse
+\emph{Parse Tree 1}
+\Tree [.Exp [ [ a ].A a ].A [ b ].B ]
+\hskip14em
+\emph{Parse Tree 2}
+\Tree [.Exp [ a a [ b ].B ]]
+
+\hfill \break
+
+An easy way to identify ambiguous grammar is either by looking at the rules and seeing that they're all defined using the same starting point, or level. Another way is by noticing that there are multiple options for how a level can be defined or interpreted. 
+
+\subsubsection{Non-Ambiguous Grammar}
+
+Non-ambiguous or unambiguous grammar is when only one parse can be derived from the context-free grammar \cite{DAU}. Meaning that there are no other possible ways to interpret the input sequence using the CFG, that only one derivation is reached no matter if the leftmost or rightmost derivation is used. Each of these unique input sequences is able to lead to the creation of a unique parse tree. Non-ambiguous grammar creates a larger parse tree and takes a longer time to generate than ambiguous grammar would \cite{AUG}. Often non-ambiguous grammar is the desired result when creating CFG since the program will then give you the same intended derivation each time. Using the first ambiguous grammar example from earlier but rewritten to be non-ambiguous we get:
+
+\begin{lstlisting}
+
+Exp ::= Exp "+" Exp1 ;
+Exp ::= Exp1 ;
+Exp1 ::= Exp1 "*" Exp2 ;
+Exp1 ::= Exp2 ; 
+Exp2 ::= a ; 
+coercions Exp 2 ;
+\end{lstlisting}
+
+This would result in a singular parse tree when parsing  \colorbox{powderblue} {$a + a * a$}.
+
+\hfill \break
+
+\emph{Parse Tree}
+\Tree [.Exp [ a ].Exp + [ [ a ].Exp * [ a ] .Exp ].Exp ]
+
+Taking the second example of ambiguous grammar from above and translating it into non-ambiguous CFG gives us: 
+
+\begin{lstlisting}
+
+Exp ::= AB;
+A ::= Aa | a ;
+B ::= b ; 
+coercions Exp 2 ;
+
+\end{lstlisting}
+
+Applying this non-ambiguous CFG to \colorbox{powderblue} {$aab$} results in the derivation of a singular tree from the parse trees generated by the ambiguous grammar. 
+
+\hfill \break
+
+\emph{Parse Tree}
+\Tree [.Exp [ [ a ].A a ].A [ b ].B ]
+
+\hfill \break
+
+It is fairly easy to take ambiguous grammar and translate it into non-ambiguous grammar, as long as there is a clear idea of how the input sequence should be evaluated. This translation can be accomplished by defining an order of precedence for how the sequence should generated into a parse tree. This can also be accomplished by removing some of the ambiguity through the removal of the multiple options that a certain sequence can be tokenized into. 
+
+\hfill \break
+
+All the examples in this section were either adaptations, compiled from multiple sources, \cite{AUG}, \cite{DAU}, and \cite{PL}, and my own knowledge, or purely from my knowledge. 
+
+\subsection{Lambda Calculus}
+Lambda calculus is known as one of the most powerful programming languages as it has extensive functionality. It is a system of mathematical logic developed by Alonzo Church in the 1930s as a foundation for functional programming \cite{LC}. It is one of the simplest languages, being able to denote functions and applications; another defining feature would be that it is Turing complete and can also work with Church numerals. 
+
+\subsubsection{Introduction}
+
+There are three basic components of lambda calculus: 
+
+in these definitions, \colorbox{powderblue}{e} is an expression
+
+\begin{itemize}
+
+\item variables: \colorbox{powderblue}{e ::= x}
+
+\item function application: \colorbox{powderblue}{e$_1$e$_2$}
+
+\item function abstraction: \colorbox{powderblue}{$\lambda$x. e}
+
+\end{itemize}
+
+For application, this would be applying the function \colorbox{powderblue}{e$_1$} to the argument \colorbox{powderblue}{e$_2$} as an entire program. For abstraction, \colorbox{powderblue}{x} would be a variable, so in the case of this function, \colorbox{powderblue}{x} is a parameter, yet in this function, \colorbox{powderblue}{e} does not depend on \colorbox{powderblue}{x}; therefore, it is abstracted \cite{PL}. While lambda calculus has no built-in functions, it is with these constructs that lambda calculus can define any function. While each lambda can only take one argument and one parameter, it can handle multiple arguments by having nested lambdas or arguments as in, \colorbox{powderblue}{($\lambda$x. ($\lambda$y. x + y) 2) 3} \cite{PL}. This would then become \colorbox{powderblue}{2 + 3} using substitution because it is also being simplified while evaluating it. Writing a function in this way, with the nested arguments, would be an example of currying.
+
+\subsubsection{Binding and Scope}
+
+\paragraph{Binding}
+
+\subparagraph{}
+
+In lambda calculus, every variable can be defined as either free or bound in a lambda expression. 
+
+\begin{itemize}
+
+\item bound variable: a variable that is tied to a $\lambda$
+
+ \colorbox{powderblue}{$\lambda$x.}
+
+x is a bound variable
+
+\item free variable: a variable that is not tied to a $\lambda$
+
+ \colorbox{powderblue}{$\lambda$x. y}
+
+y is a free variable
+
+\end{itemize}
+
+Often the lambda part of the expression, \colorbox{powderblue}{$\lambda$x.}, will be called a binder since it is the $\lambda$ that determines what a variable will be characterized as. A variable can be both bound and free within the same function, as in the case of \colorbox{powderblue}{($\lambda$x. xy)($\lambda$y. y)}, where \colorbox{powderblue}{y} is both bound and free as the two functions do not interact in that way. An expression with no free variables, like \colorbox{powderblue}{($\lambda$y. y)} can also be defined as a closed expression; however, any expression with more than just bound variables would be called an open expression, as in  \colorbox{powderblue}{($\lambda$x. xy)} \cite{LC}. 
+
+\break
+
+\paragraph{Scope}
+
+\subparagraph{}
+
+Scope functions in lambda calculus expressions the same way it would in other programming languages. In particular lambda calculus uses lexical scoping. Lexical scoping is when the program's text defines the scope of the variable, this means the text simply has to be inspected to determine the scope of a variable \cite{TLC}. This expression, \colorbox{powderblue}{($\lambda$x. xy)($\lambda$y. y)}, can also show us how scope affects an expression. As y is not within the scope of  \colorbox{powderblue}{$\lambda$x.} in the first function, so it becomes free. The \colorbox{powderblue}{x} is bound to \colorbox{powderblue}{$\lambda$x.} meaning it is in the scope of \colorbox{powderblue}{x}. The  \colorbox{powderblue}{y} represents something different in the first function from the  \colorbox{powderblue}{y} in the second function. In order to not be confused when dealing with binding and scope, it can be helpful to name variables differently depending on if they have local or global scope.
+
+\subsubsection{Examples}
+
+An example from \cite{PL}. \newline
+
+\[((\lambda x. \lambda y. x + y)y)2 \] \newline
+
+The  \colorbox{powderblue}{y} outside the parentheses is a free variable. While the  \colorbox{powderblue}{y's} inside are bound variables. 
+
+Because the \colorbox{powderblue}{y's} are bounded differently, this means they cannot be evaluated as if they were the same variable. Shown below is an incorrect way of evaluating the expression. \newline
+
+\[(\lambda y. y + y)2\]
+
+\[2 + 2\] \newline
+
+This expression, when evaluated correctly, should result in \colorbox{powderblue}{$y + 2$}. This is because the one \colorbox{powderblue}{y} is a free variable, so it cannot be substituted the way the \colorbox{powderblue}{y's} attached to the binder are. This result leaves the free variable as a free variable. A free variable can not become a bound variable. 
+
+By renaming the variables in the function, it can become clearer which variables are free and which are bound. Once the characterization of the variables and their scope is clear, it can become much more apparent how this function should be evaluated. \newline
+
+\[((\lambda a. \lambda b. a + b)y)2\]
+
+\[(\lambda b. y + b) 2\]
+
+\[y +2\] \newline
+
+\break
+
+Another example of a call-by-value expression, in this case the \colorbox{powderblue}{y} expression is the value getting substituted into the \colorbox{powderblue}{x} function. \newline
+
+\[(\lambda x. x x)(\lambda y. y)\]
+
+\[(\lambda y. y)(\lambda y. y)\] \newline
+
+Lambda calculus expression evaluated using call-by-name, here the \colorbox{powderblue}{y} function is substituted into the \colorbox{powderblue}{x} function. \newline
+
+\[(\lambda x. x x)((\lambda y. y)(\lambda y. y))\]
+
+\[((\lambda y. y)(\lambda y. y))((\lambda y. y)(\lambda y. y))\] \newline
+
+The second call-by-value example is also an example of a non-terminating expression, it doesn't matter if we evaluate it using call-by-name or call-by-value, we'll continue to get the same result \colorbox{powderblue}{$(\lambda y. y)(\lambda y. y)$}.
+
+Sometimes though, call-by-name can terminate an expression that would otherwise not terminate if it was only evaluated using call-by-value. This happens in the case of the following expression:\newline
+
+\[(\lambda x. \lambda y. y)((\lambda y. yy)(\lambda y. yy))\]
+
+\[(\lambda x. \lambda y. y)((\lambda y. yy)(\lambda y. yy))\] \newline
+
+If this were to be evaluated using call-by-name it would result in:\newline
+
+\[\lambda y. y\] \newline
+
+The previous examples were taken from slides provided by \cite{CCL}.
+
+\subsubsection{Church Numerals}
+
+\paragraph{Introduction}
+
+\subparagraph{}
+
+Church numerals are another invention of Churches' used to represent natural numbers as functions. They allow lambda calculus to interact with natural numbers without actually working with them directly \cite{CN}. This representation is accomplished by using lambda calculus to denote zero and any successor number. All Church numerals are represented using two parameters \colorbox{powderblue}{s}, is the successor function and \colorbox{powderblue}{o}, is a value representing zero \cite{CR}. \newline
+
+\[\lambda s. \lambda o.  something\] \newline
+
+Using this argument zero will be represented as \colorbox{powderblue}{$\lambda s. \lambda o. o$}, once we have this as a base we are free to use the successor function to represent any other natural number. The natural number \colorbox{powderblue}{n} can be represented as the church numeral \colorbox{powderblue}{n}. \newline
+
+\[1: \lambda s. \lambda o. so\] 
+\[2: \lambda s. \lambda o. s(so)\] 
+\[3: \lambda s. \lambda o. s(s(so))\] 
+\[\underline{n}: \lambda s. \lambda o. s^n o\] \newline
+
+To discover the natural number that the church numeral denotes, all you have to do is count the number of times the function is applied. There is an actual successor function that can be applied to \colorbox{powderblue}{n} in order to find its successor; \colorbox{powderblue}{S(n)} this function would result in the same thing as \colorbox{powderblue}{n + 1} \cite{CR}. \newline
+
+$$S = \lambda n. \lambda s. \lambda o. (s(nso))$$ \newline
+
+Using Church numerals, simple arithmetic functions can also easily be defined in lambda calculus. They are able to perform these types of expressions as everything is relative to the Church numeral of zero \cite{CR}.  Using the successor function, we can get addition, then from there, multiplication. Using multiplication, we can obtain a function for exponentiation. 
+
+\begin{itemize}
+
+\item Add: $\lambda m. \lambda n. \lambda s. \lambda o. ms(nso)$
+
+using the successor function, this becomes
+
+$\lambda mn. (mSn)$
+
+from here we get the function: 
+
+\colorbox{powderblue}{add m n = m + n} \cite{CR} \newline
+
+\item Mult: $\lambda m. \lambda n. \lambda s. \lambda o. m (sn)o$
+
+utilizing the add function, 
+
+$\lambda mn. m(add n) \underline{0}$
+
+our final function will be:
+
+\colorbox{powderblue}{mult m n = m * n} \cite{CR} \newline
+
+\item Exp: $\lambda m. \lambda n. \lambda s. \lambda o. mnso$
+
+with the multiplication function, exponentiation can be simplified to
+
+$\lambda mn. m(mult n) \underline{1}$
+
+this makes a function of:
+
+\colorbox{powderblue}{exp m n = $\underline{m}^{\underline{n}}$} \cite{CR} \newline
+
+\end{itemize}
+
+Church numerals can also be used in functions for predecessors; from there, arithmetic functions such as subtraction and division are able to be created. While Church numerals only expressly denote natural numbers, Church numerals can also be used for more complex numbers like integers and floating-point numbers \cite{TLC}. 
+
+\paragraph{Church Numerals and Haskell}
+
+\subparagraph{}
+
+Church numerals can be implemented in Haskell by making use of Haskell typecasting. The basic type of a Church numeral in Haskell is  \colorbox{pink}{ \lstinline{type Church a = (a -> a) -> (a -> a)}} \cite{CE}. This typecasting is doing the same thing as the lambda calculus denotation of the above Church numerals. One parenthesis of \colorbox{powderblue}{a} is used to represent the first function for successors, while the second parentheses of \colorbox{powderblue}{a} is used to typecast the zero value. To actually obtain a Church numeral from an integer, a church function will need to be implemented. The church function is simply applying the lambda calculus to the church type obtained from the integer. This means that the church function only needs to be applied two ways, as it will use recursion. Firstly by defining a base case of \colorbox{powderblue}{0}, and then for any natural number \colorbox{powderblue}{n}. The \colorbox{powderblue}{$\lambda$} is represented by \colorbox{powderblue}{\textbackslash} in Haskell. \newline
+
+\begin{lstlisting}
+
+type Church a = (a -> a) -> (a -> a)
+
+numToChurch :: Integer -> Church
+
+numToChurch 0 = \s -> \o -> o
+
+numToChurch n = \s -> \o -> s(churchNum (n - 1) s o)
+
+\end{lstlisting}
+
+To take a Church numeral back to integer another function must be created. Once again we can rely upon lambda calculus to explain what is going on in the function, this would be a variation of the successor function that relies upon recursion and a base case of 0: \colorbox{powderblue}{$\lambda x. x (\lambda y. y + 1)(0)$}. \newline
+
+\begin{lstlisting}
+
+churchToNum :: Church -> Integer
+
+churchToNum cn = \x -> x (\y -> y +1) (0)
+
+\end{lstlisting}
+
+These above examples are adapted from \cite{CE} and \cite{CR}.
+
+\subsubsection{Turing Complete}
+
+To call a programming language Turing complete means that it can solve any computational problem given enough time and memory no matter how complex \cite{TC}. A machine that was Turing complete became known as a Turing machine; if the machine was programmed using the right instructions, it could solve any problem. Lambda calculus is known to be Turing complete since it is a powerful model of computation and can be used to implement a Turing machine. Turing himself proved that Church's and his models, lambda calculus and Turing machines, were equivalent, remarking upon the universality of the two \cite{OTM}. As they are equivalent, this means that this idea also works in reverse, that a Turing machine can simulate lambda calculus. In particular, lambda calculus can simulate a Universal Turing Machine, allowing the Universal Turing Machine to evaluate problems using lambda calculus \cite{LC}.  In Church's Thesis, he asserts that lambda calculus can represent any computable function, reinforcing that it is a Turing complete language \cite{FFP}. This assertion also implies that lambda calculus is just as powerful as recursive functions since recursive functions are computable and therefore saying that all lambda calculus definable functions are recursive \cite{FFP}.
+
+\paragraph{The Halting Problem}
+
+\subparagraph{}
+
+Lambda calculus faces the Halting problem as it is normalizing but not terminating. The Halting problem is, in simple terms, the problem of determining if, considering a program and an input, the program will terminate or continue to run forever \cite{HP}. As we saw earlier in this section in certain cases lambda calculus expression do not terminate, \colorbox{powderblue}{$((\lambda x. (xx))(\lambda x. (xx)))$}, they will continue to reach the same result each time the expression is computed.  Though it doesn't necessarily have to reach a result to be considered terminating, it could get some error and terminate and accordingly be classified as terminating \cite{LC}. Even if an expression doesn't terminate, it can still normalize by reaching a normal form. For lambda calculus, a normal form is an equivalent form in which no more reductions or simplifications can be made \cite{LC}. A normal form is \colorbox{powderblue}{$\lambda x.x$} as it can't be reduced anymore yet, \colorbox{powderblue}{$((\lambda x. (xx))(\lambda x. (xx)))$} is not since it still possible to reduce it \cite{LC}. Because of all this, it has been decided that the Halting problem with regards to Turing machines, and lambda calculus as well, is undecidable \cite{LC}. As Turing proved, there is no program that can definitively prove the Halting problem making it unsolvable and undecidable \cite{HP}. The Halting problem can be solved in lambda calculus with the addition of types; this ensures that a lambda calculus problem will terminate \cite{LC}. This is why it is important to typecast lambda calculus within Haskell so that it is terminating.
+
+\section{Project}
+
+\subsection{Introduction}
+
+This section shows a project that consists of rewriting Roman numerals, creating arithmetic using Roman numerals, and converting between roman numerals and integers. This entire project was created by following a project conceived of by \cite{RNC} and then building upon it using the understanding gained throughout it. This project emphasizes such ideas as the grammar or the order of rewriting, as it is the basis of the project. It involves three different functions: \colorbox{pink}{ \lstinline{order}}, \colorbox{pink}{ \lstinline{reduce}}, and \colorbox{pink}{ \lstinline{extend}}. The second part would be arithmetic, where it is necessary to understand how Roman numerals interact with each other and concepts of basic arithmetic. This involves four functions: \colorbox{pink}{ \lstinline{addRN}}, \colorbox{pink}{ \lstinline{subRN}}, \colorbox{pink}{ \lstinline{minusRN}}, and \colorbox{pink}{ \lstinline{multRN}}. The third section concerns conversions; how to switch between roman numerals and integers. This section enforces concepts of recursion as well as the idea of how to use modules. There is also a fourth part which is simply normalization, taking the roman numeral and making it syntactically correct.
+
+\subsection{The Project}
+To run this project simply open terminal and navigate to the folder within which the romanNumerals.hs file is contained. Then use the \colorbox{pink}{ \lstinline{stack exec ghci}} to open the interactive console. From there load it by \colorbox{pink}{ \lstinline{:l romanNumerals.hs}}, then \colorbox{pink}{ \lstinline{:set -XOverloadedStrings}}, and finally \colorbox{pink}{ \lstinline{:main}} to see some of the results of the test code executed. Also in the interactive console specific functions can be run.
+
+\subsubsection{Section 1}
+
+\paragraph{Order}
+
+\subparagraph{}
+
+The first function \colorbox{pink}{ \lstinline{order}} is simply taking a string of Roman numerals and rewriting the string so that the string is ordered from the left to the right with the largest numeral as the leftmost character and the smallest numeral as the rightmost character. The idea behind this is very similar to how grammar is defined or the rules behind an abstract syntax tree. In this case, we know that most roman numerals are written with the largest numeral as the leftmost character, so those are the implemented rules. Since this was to be achieved, that meant that the function needed to be ordered in such a way that this is actually what happens when the string is rewritten. That means that the first line of code that the string should encounter would be the character that we want to end up as the rightmost part of the string, the would mean the code begins with rewriting I and ends with M as it is the biggest we are going with this example. Of course, there needs to be a catch-all case which is the \colorbox{pink}{ \lstinline{otherwise}} where the string is just set to empty. 
+
+\begin{lstlisting}
+order :: T.Text -> T.Text
+order s
+    | let ind = M.fromJust (T.findIndex ('I' ==) s), let (bef, aft) = T.splitAt ind s, T.isInfixOf (T.singleton 'I') s = T.snoc (order (T.append bef (T.tail aft))) 'I'
+    | let ind = M.fromJust (T.findIndex ('V' ==) s), let (bef, aft) = T.splitAt ind s, T.isInfixOf (T.singleton 'V') s = T.snoc (order (T.append bef (T.tail aft))) 'V'
+    | let ind = M.fromJust (T.findIndex ('X' ==) s), let (bef, aft) = T.splitAt ind s, T.isInfixOf (T.singleton 'X') s = T.snoc (order (T.append bef (T.tail aft))) 'X'
+    | let ind = M.fromJust (T.findIndex ('L' ==) s), let (bef, aft) = T.splitAt ind s, T.isInfixOf (T.singleton 'L') s = T.snoc (order (T.append bef (T.tail aft))) 'L'
+    | let ind = M.fromJust (T.findIndex ('C' ==) s), let (bef, aft) = T.splitAt ind s, T.isInfixOf (T.singleton 'C') s = T.snoc (order (T.append bef (T.tail aft))) 'C'
+    | let ind = M.fromJust (T.findIndex ('D' ==) s), let (bef, aft) = T.splitAt ind s, T.isInfixOf (T.singleton 'D') s = T.snoc (order (T.append bef (T.tail aft))) 'D'
+    | let ind = M.fromJust (T.findIndex ('M' ==) s), let (bef, aft) = T.splitAt ind s, T.isInfixOf (T.singleton 'M') s = T.snoc (order (T.append bef (T.tail aft))) 'M'
+    | otherwise = T.empty
+\end{lstlisting}
+
+Each line looks for the index of the first occurrence of the single Roman numeral in the input string using the Maybe monad function \colorbox{pink}{ \lstinline{fromJust}}; this function works by extracting an element out of a Just, which in this case is the function \colorbox{pink}{ \lstinline{findIndex}}. Next, the string is split at the index point, with the \colorbox{pink}{ \lstinline{before}} becoming the string before the index of occurrence. The after is the rest of the string, including the index, this part of the string is then checked to find if there are other occurrences of the character in the string. If so, the two separate strings are called recursively after being concatenated without the specific character that was split upon. This continues until there are no more occurrences, at which point all of the previously encountered characters will be appended at the end. While this idea of rewriting works, for the most part, Roman numerals are not that simple, and there are exceptions to this standard grammar.
+
+\paragraph{Reduce}
+
+\subparagraph{}
+
+Can create exception handling using a function called \colorbox{pink}{ \lstinline{reduce}}, this function will come after the order function because if we think about it in terms of rules, this rewriting will be applied to whatever result was created. Once again, the order of the lines of code is crucial since the function will be called recursively, and in some instances, the \colorbox{pink}{ \lstinline{order}} function will be called. It is not enough, though, to format this function exactly like the \colorbox{pink}{ \lstinline{order}} function where all you need to do is list the rules and include an otherwise. This is because not every string needs to go through this function, and in certain cases, there will be characters within the string that can’t be reduced. To account for this, there is the line \colorbox{pink}{ \lstinline{not (T.null s) = T.snoc (reduce (T.init s)) (T.last s)}}; this test to see if the string is empty, if not then we save the character that prevented our string from fitting into any of the other rules and call refine on the rest of the string until the rest of the string is organized and then we add that character back onto the end. It is also important that when dealing with suffixes of similar types, such as \colorbox{powderblue}{\textbf{\textit{IIII}}} and \colorbox{powderblue}{\textbf{\textit{IIIII}}} to have the longer one be listed earlier, because if the shorter one is listed earlier than, the longer version will match up with that shorter one even tho that’s not what it actually represents. Another thing to keep in mind is that \colorbox{pink}{ \lstinline{order}} shouldn’t be called on functions that go against the traditional order as in nine, \colorbox{powderblue}{\textbf{\textit{IX}}}. Part of discovering the order is thinking through how the numerals interact but, part of it is trial and error, seeing what the rewrite gives you once it gets to a point where it doesn’t follow the \colorbox{pink}{\lstinline{order}} rules. 
+
+\break
+
+\begin{lstlisting}
+reduce :: T.Text -> T.Text
+reduce s
+    | T.isSuffixOf (T.pack "VV") s = reduce (order (T.append (T.dropEnd 2 s)(T.pack "X") ))
+    | T.isSuffixOf (T.pack "IIIII") s = reduce (order (T.append (T.dropEnd 5 s) (T.pack "V")))
+    | T.isSuffixOf (T.pack "VIIII") s = reduce (T.append (T.dropEnd 5 s) (T.pack "IX"))
+    | T.isSuffixOf (T.pack "IIII") s = reduce (T.append (T.dropEnd 4 s) (T.pack "IV"))
+    | T.isSuffixOf (T.pack "VIX") s = reduce (T.append (T.dropEnd 3 s) (T.pack "XIV"))
+    | T.isSuffixOf (T.pack "LL") s = reduce (order (T.append (T.dropEnd 2 s) (T.pack "C")))
+    | T.isSuffixOf (T.pack "XXXXX") s = reduce (order (T.append (T.dropEnd 5 s) (T.pack "L")))
+    | T.isSuffixOf (T.pack "LXXXX") s = reduce (T.append (T.dropEnd 5 s) (T.pack "XC"))
+    | T.isSuffixOf (T.pack "XXXX") s = reduce (T.append (T.dropEnd 4 s) (T.pack "XL"))
+    | T.isSuffixOf (T.pack "LXC") s = reduce (T.append (T.dropEnd 3 s) (T.pack "CLX"))
+    | T.isSuffixOf (T.pack "DD") s = reduce (order (T.append (T.dropEnd 2 s) (T.pack "M")))
+    | T.isSuffixOf (T.pack "CCCCC") s = reduce (order (T.append (T.dropEnd 5 s) (T.pack "D")))
+    | T.isSuffixOf (T.pack "DCCCC") s = reduce (T.append (T.dropEnd 5 s) (T.pack "CM"))
+    | T.isSuffixOf (T.pack "CCCC") s = reduce (T.append (T.dropEnd 4 s) (T.pack "CD"))
+    | T.isSuffixOf (T.pack "DCM") s = reduce (T.append (T.dropEnd 3 s) (T.pack "MCD"))
+    | not (T.null s) = T.snoc (reduce (T.init s)) (T.last s)
+    | otherwise = T.empty
+\end{lstlisting} 
+
+Each line looks at the end of the string \colorbox{pink}{\lstinline{s}}, to find the numerals that can be rewritten. T.pack is frequently used throughout this function and others as the type String needs to be type T.Text. If the specific suffix is found, then \colorbox{pink}{\lstinline{reduce}} is called recursively on the rewritten string. The rewritten string consists of the removed suffix and the appended rewritten Roman numeral.
+
+\paragraph{Extend}
+
+\subparagraph{}
+
+While \colorbox{pink}{\lstinline{extend}} is included in this section as it is part of rewriting a string of Roman numerals, it is actually used in the arithmetic section. A necessary addition, as Roman numerals use subtraction to represent certain numbers which would lead to inaccurate arithmetic. This function is laid out, in the same way, as the \colorbox{pink}{\lstinline{reduce}} function but does the exact opposite of it. So instead of having a non-empty string case that reduces the front of the string and saves the back to be appended, it extends the back of the string and saves the frontmost character that cannot be extended using the rules to prepend to the rewritten string. Conceptually, it looks at the beginning of the string, searching for Roman numeral combinations that can be expanded. It doesn’t have to worry about the order that the Roman numerals are in, as that is not a concern when adding, so it does not include cases of pure reordering like in \colorbox{pink}{\lstinline{reduce}}. It does follow a very set order. You have the largest Roman numerals at the top of the cases since those will need to be expanded first before encountering the extending of smaller Roman Numerals.
+
+\begin{lstlisting}
+extend :: T.Text -> T.Text
+extend s
+    | T.isPrefixOf (T.pack "CM") s = T.append (T.pack "DCCCC") (extend (T.drop 2 s))
+    | T.isPrefixOf (T.pack "CD") s = T.append (T.pack "CCCC") (extend (T.drop 2 s))
+    | T.isPrefixOf (T.pack "XC") s = T.append (T.pack "LXXXX") (extend (T.drop 2 s))
+    | T.isPrefixOf (T.pack "XL") s = T.append (T.pack "XXXX") (extend (T.drop 2 s))
+    | T.isPrefixOf (T.pack "IX") s = T.append (T.pack "VIIII") (extend (T.drop 2 s))
+    | T.isPrefixOf (T.pack "IV") s = T.append (T.pack "IIII") (extend (T.drop 2 s))
+    | not (T.null s) = T.cons (T.head s) (extend (T.tail s))
+    | otherwise = T.empty
+\end{lstlisting}
+
+\subsubsection{Section 2}
+
+\paragraph{addRN}
+
+\subparagraph{}
+
+Arithmetic using Roman numerals is a fairly simple process as at the most basic level, all that needs to happen is that the two strings are concatenated. To get a more exact and syntactically correct version of the addition, \colorbox{pink}{\lstinline{reduce}} and \colorbox{pink}{\lstinline{order}}, or when used together \colorbox{pink}{\lstinline{normalize}} are called. To add more precisely, \colorbox{pink}{\lstinline{extend}} is also called since Roman numerals use a form of subtraction; that way, the exact version of the number is the one the function interacts with. While there is a lot of rewriting to be done, there is really only one step to the addition process of Roman numerals. 
+
+\begin{lstlisting}
+addRN :: T.Text -> T.Text -> T.Text
+addRN n m = normalize (T.concat [extend n, extend m])
+\end{lstlisting}
+
+\paragraph{subRN}
+
+\subparagraph{}
+
+This is critical for the computation of subtraction and multiplication using Roman numerals since both of those functions will be completed recursively. We can’t just write a subtraction function since you can’t just do a concatenation like for addition. Instead, we’ll continue to subtract one from each side until one becomes empty. To do this, we need a minus one function which is what \colorbox{pink}{\lstinline{subRN}} does. It is able to do this by once again listing out a bunch of cases and including an \colorbox{pink}{\lstinline{otherwise}}. This function uses many of the same cases as \colorbox{pink}{\lstinline{reduce}} however, it doesn’t need to account for a simple reorganization. It only focuses on the combined reduced characters and the single characters. Starting with the \colorbox{powderblue}{\textbf{\textit{I}}} as the topmost case because at the very last one that can be subtracted is one, and then each case thereafter increases in value until reaching \colorbox{powderblue}{\textbf{\textit{M}}}. 
+
+\begin{lstlisting}
+subRN :: T.Text -> T.Text
+subRN s
+    | T.isSuffixOf (T.pack "I") s = T.dropEnd 1 s
+    | T.isSuffixOf (T.pack "IV") s = T.append (T.dropEnd 2 s) (T.pack "III")
+    | T.isSuffixOf (T.pack "V") s = T.append (T.dropEnd 1 s) (T.pack "IV")
+    | T.isSuffixOf (T.pack "IX") s = T.append (T.dropEnd 2 s) (T.pack "VIII")
+    | T.isSuffixOf (T.pack "X") s = T.append (T.dropEnd 1 s) (T.pack "IX")
+    | T.isSuffixOf (T.pack "XL") s = T.append (T.dropEnd 2 s) (T.pack "XXXIX")
+    | T.isSuffixOf (T.pack "L") s = T.append (T.dropEnd 1 s) (T.pack "XLIX")
+    | T.isSuffixOf (T.pack "XC") s = T.append (T.dropEnd 2 s) (T.pack "LXXXIX")
+    | T.isSuffixOf (T.pack "C") s = T.append (T.dropEnd 1 s) (T.pack "XCIX")
+    | T.isSuffixOf (T.pack "CD") s = T.append (T.dropEnd 2 s) (T.pack "CCCXCIX")
+    | T.isSuffixOf (T.pack "D") s = T.append (T.dropEnd 1 s) (T.pack "CDXCIX")
+    | T.isSuffixOf (T.pack "CM") s = T.append (T.dropEnd 2 s) (T.pack "DCCCXCIX")
+    | T.isSuffixOf (T.pack "M") s = T.append (T.dropEnd 1 s) (T.pack "CMXCIX")
+    | otherwise = T.empty
+\end{lstlisting}
+
+Each case looks for the suffix containing a certain Roman numeral character combination. Once finding one, it will remove the suffix from the string and append the reduced version to the rewritten string. One way of thinking about these key Roman numeral combinations is that they need to be accounted for if they are out of order of the original grammar.
+
+\paragraph{minusRN}
+
+\subparagraph{}
+
+Once the backbone of \colorbox{pink}{\lstinline{subRN}} is in place, \colorbox{pink}{\lstinline{minusRN}} is very easy to conceptualize. This form of the function only accounts for the subtraction of a smaller number from a larger number. The first case asserts that if the first Roman numeral is an empty string, then the result is an empty string. This also means that the first Roman numeral becomes a negative number through subtraction, resulting in an empty string. This case could be modified to account for negative numbers using second case and changing it so that if \colorbox{pink}{\lstinline{n}} is empty then it will equal \colorbox{pink}{\lstinline{m}}. In which case, m would be the leftover of the second number and therefore be negative. This is the same line as the second case, except the second case signifies a positive number since the second number was not greater than the first. The third case is the actual action of subtraction. 
+
+\begin{lstlisting}
+minusRN :: T.Text -> T.Text -> T.Text
+minusRN n m
+    | n == T.empty = T.empty
+    | m == T.empty = n
+    | otherwise = minusRN (subRN n) (subRN m)
+\end{lstlisting}
+
+The \colorbox{pink}{\lstinline{otherwise}} works by calling \colorbox{pink}{\lstinline{minusRN}} recursively while one is subtracted from each Roman numeral until one becomes an empty string. Through this process of subtracting by one, the string is also rewritten and remains syntactically correct. Once one of the numerals is empty, the operation is complete, and the result is achieved.
+
+\paragraph{multRN}
+
+\subparagraph{}
+
+The multiplication of Roman numerals accounts for four different cases, with the first three being base cases. The first case states that if either is empty, therefore, equal to zero, then the result will be zero. The second and third cases check if either of the numerals being multiplied is equal to one, and if that is the case, then the result will be the numeral that is not one. 
+
+\begin{lstlisting}
+multRN :: T.Text -> T.Text -> T.Text
+multRN n m
+    | (n == T.empty) || (m  == T.empty) = T.empty
+    | m == T.pack "I" = n
+    | n == T.pack "I" = m
+    | otherwise = addRN n (multRN n (subRN m))
+\end{lstlisting}
+
+The fourth case, \colorbox{pink}{\lstinline{otherwise}}, is the multiplication operation. The multiplication operation can be thought of as adding the first numeral as many times as the second numeral calls for. This is completed by adding the first numeral and then calling \colorbox{pink}{\lstinline{multRN}} recursively on the first numeral and the second numeral until the second numeral is equal to one.
+
+\subsubsection{Section 3}
+
+\paragraph{intRN}
+
+\subparagraph{}
+
+This function converts an Integer into a Roman numeral using recursion. This starts by defining a base case where if the Integer is zero then the string will be empty. If not then an \colorbox{powderblue}{\textbf{\textit{I}}} will be added to the string each time one is subtracted from the original integer resulting in a string of \colorbox{powderblue}{\textbf{\textit{I}}}’s equal to the Integer. \colorbox{pink}{\lstinline{normalize}} does have to be called on this function to change the result into a syntactically Roman numeral. This is due to the fact that \colorbox{pink}{\lstinline{normalize}} could not be called within the function as a  \colorbox{powderblue}{\textbf{\textit{I}}}  would still be added on even if the string was rewritten to a subtraction Roman numeral. Calling \colorbox{pink}{\lstinline{normalize}} after the entire recursive computation ensures that the number is accurate
+
+\break
+
+\begin{lstlisting}
+intRN :: Integer -> T.Text
+intRN 0 = T.empty
+intRN n = T.append (T.pack "I") (intRN(n - 1))
+\end{lstlisting}
+
+\paragraph{rnInt}
+
+\subparagraph{}
+
+While the temptation is there to format the conversion from a Roman numeral to an Integer the same as the opposite conversion, that would be impossible as far as I could understand. That is because there is no way to represent a base case using the type Data.Text since that would be putting a qualified name in a binding position. To work around this, a variable and the case format were used; from there, the base case and recursive definition could be achieved. The base case was that the Integer would be zero if the variable were empty. If not, one would be added each time the recursive definition was called, and the Roman numeral was subtracted by one. 
+
+\begin{lstlisting}
+rnInt :: T.Text -> Int
+rnInt m
+    | m == T.empty = 0
+    | otherwise = 1 + rnInt (subRN m)
+\end{lstlisting}
+
+\paragraph{Normalize}
+
+\subparagraph{}
+
+Normalize is the simplest function in this program, it only normalizes whatever Roman numeral string is given to it. It accomplishes this by rewriting the string, first using the \colorbox{pink}{\lstinline{order}} function and then by using the \colorbox{pink}{\lstinline{reduce}}, resulting in a syntactically correct Roman numeral string.
+
+\begin{lstlisting}
+normalize :: T.Text -> T.Text
+normalize x = reduce (order x)
+\end{lstlisting}
+
+To implement many of the functions in this project, the documentation of the Maybe monad and Text module were used \cite{DM} and \cite{DT}.
+
+\section{Conclusion}\label{conclusion}
+An exploration of Programming Languages in three different parts, from a Programming Language itself to a project using a Programming Language. This paper explored ideas such as Haskell as a Programming Language and essential Programming Language theories. It also furthered these ideas through a project concerning Roman numerals. It showed how to use Haskell, features of Haskell, how Haskell functions, and further resources. Then it examined such theories of Programming Languages as, Parsing and Lambda Calculus. The paper delved into Parsing through abstract syntax trees and ambiguous and non-ambiguous grammar. It then used binding and scope, Church numerals, and the concept of Turing complete to explain Lambda Calculus. Ending with a project on a Roman numeral calculator that uses Haskell to analyze the ideas of recursion and rewriting along with others. This paper can only cover a small part of the study of Programming Languages yet is able to give a brief introduction.
+
+\break
+
+\begin{thebibliography}{99}
+\bibitem[PL]{PL} \href{https://github.com/alexhkurz/programming-languages-2021/blob/main/README.md}{Programming Languages 2021}, Chapman University, 2021.
+
+\bibitem[FPI]{FPI} \href{https://www.tutorialspoint.com/functional_programming/functional_programming_introduction.htm}{Functional Programming - Introduction}, tutorialspoint, 2021
+
+\bibitem[TT]{TT} \href{http://learnyouahaskell.com/types-and-typeclasses}{Types and Typeclasses}, Learn You a Haskell
+
+\bibitem[TCO]{TCO} \href{https://www.haskell.org/tutorial/classes.html}{Type Classes and Overloading}, A Gentle Introduction to Haskell, Version 98
+
+\bibitem[WFP]{WFP} \href{https://www.educative.io/blog/what-is-functional-programming-python-js-java}{What is functional programming?}, Ryan Thelin, Oct 15, 2020
+
+\bibitem[CSE]{CSE} \href{http://users.sdsc.edu/~ludaesch/CSE130/ln5.html}{CSE 130 Lecture Notes}, University of California, San Diego, January 24, 2001
+
+\bibitem[WT]{WT} \href{https://typeofnan.dev/what-is-a-thunk/}{What is a Thunk?}, Nick Scialli, January 31, 2020
+
+\bibitem[LEI]{LEI} \href{https://takenobu-hs.github.io/downloads/haskell_lazy_evaluation.pdf}{Lazy evaluation illustrated for Haskell divers}, Takenobu T.
+
+\bibitem[R]{R} \href{http://learnyouahaskell.com/recursion}{Recursion}, Learn You a Haskell
+
+\bibitem[AAM]{AAM} \href{https://wiki.haskell.org/All_About_Monads}{All About Monads}, Haskell Wiki 
+
+\bibitem[AM]{AM} \href{https://www.haskell.org/tutorial/monads.html}{About Monads}, A Gentle Introduction to Haskell, Version 98
+
+\bibitem[FM]{FM} \href{http://learnyouahaskell.com/a-fistful-of-monads}{A Fistful of Monads}, Learn You a Haskell
+
+\bibitem[P]{P} \href{https://en.wikibooks.org/wiki/Introduction_to_Programming_Languages/Parsing}{Introduction to Programming Languages/Parsing}, Wikibooks, 2020
+
+\bibitem[AS]{AS} \href{https://www.cs.princeton.edu/courses/archive/spr96/cs441/notes/l2.html}{Parsing}, Princeton, Feb 8, 1996
+
+\bibitem[GP]{GP} \href{https://tomassetti.me/guide-parsing-algorithms-terminology/} {A Guide to Parsing: Algorithms and Terminology}, Gabriele Tomassetti
+
+\bibitem[DAU]{DAU} \href{https://www.geeksforgeeks.org/difference-between-ambiguous-and-unambiguous-grammar/}{Difference between Ambiguous and Unambiguous Grammar}, Geeks for Geeks, July 15, 2020
+
+\bibitem[AUG]{AUG} \href{https://pediaa.com/difference-between-ambiguous-and-unambiguous-grammar/}{Difference Between Ambiguous and Unambiguous Grammar}, Lithmee, August 3, 2018
+
+\bibitem[LC]{LC} \href{https://brilliant.org/wiki/lambda-calculus/}{Lambda Calculus}, Brilliant Wiki, December 15, 2021
+
+\bibitem[TLC]{TLC} \href{https://www.cs.cornell.edu/courses/cs3110/2008fa/recitations/rec26.html}{The Lambda Calculus}, Cornell, 2008
+
+\bibitem[CCL]{CCL} \href{https://www.cs.princeton.edu/courses/archive/fall16/cos326/lec/17-cbn-cbv.pdf}{Call-by-name, Call-by-value, and Lazy Evaluation}, David Walker and Andrew W. Appel, 2015
+
+\bibitem[CN]{CN} \href{https://mjoldfield.com/atelier/2011/01/church-numerals.html}{Church Numerals}, Martin Oldfield, June 5, 2013
+
+\bibitem[CR]{CR} \href{https://www.cs.rice.edu/~javaplt/311/Readings/supplemental.pdf}{Comp 311 - Review 2}, Robert Cartwright, 2008
+
+\bibitem[CE]{CE} \href{https://en.wikipedia.org/wiki/Church_encoding}{Church Encoding}, Wikipedia, December 15, 2021
+
+\bibitem[RC]{RC} \href{https://rosettacode.org/wiki/Church_numerals#Haskell}{Church Numeral: Haskell}, Rosetta Code, October 3, 2021
+
+\bibitem[TC]{TC} \href{https://academy.binance.com/en/glossary/turing-complete}{Glossary: Turing Complete}, Binance Academy, 2021
+
+\bibitem[FFP]{FFP} \href{https://www.cl.cam.ac.uk/~lp15/papers/Notes/Founds-FP.pdf}{Foundations of Functional Programming}, Lawrence C Paulson, 2021
+
+\bibitem[OTM]{OTM} \href{https://www.cs.cmu.edu/~rwh/talks/cs50talk.pdf}{$\lambda$-Calculus: The Other Turing Machine}, Blelloch and Harper, October 25, 2015
+
+\bibitem[HP]{HP} \href{https://en.wikipedia.org/wiki/Halting_problem}{Halting problem}, Wikipedia, December 15, 2021
+
+\bibitem[RNC]{RNC} \href{https://danshaub.github.io/HaskellBlog/BlogPosts/post4.html}{Roman Numeral Calculator (Project)}, Dan Haub, December 23, 2020
+
+\bibitem[DM]{DM} \href{https://hackage.haskell.org/package/base-4.16.0.0/docs/Data-Maybe.html}{Data.Maybe}, Haddock, version 2.26.0
+
+\bibitem[DT]{DT} \href{https://hackage.haskell.org/package/text-1.2.5.0/docs/Data-Text.html#g:6}{Data.Text}, Haddock, 2.24.0
+
+\end{thebibliography}
+
+\end{document}
